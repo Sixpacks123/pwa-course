@@ -1,6 +1,5 @@
 const cacheName = 'v1';
 const filesToCache = [
-  '/',
   '/index.html',
   '/icons/github-256.png',
   '/icons/github-512.png',
@@ -18,11 +17,21 @@ self.addEventListener('install', event => {
 });
 
 // Intercepter les requêtes réseau et répondre avec les ressources mises en cache
-self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request)
-      .then(cachedResponse => {
-        return cachedResponse || fetch(event.request);
-      })
-  );
+self.addEventListener("fetch", (e) => {
+    console.log("[SW] Fetching url: ", e.request.url);
+    e.respondWith((async () => {
+
+        const match = await caches.match(e.request);
+        if (match) return match;
+
+        const response = await fetch(e.request);
+
+        if (e.request.method === "GET" && !(e.request.headers.get("Cache-Control") === "no-cache" || e.request.headers.get("Cache-Control") === "no-store")) {
+            const cache = await caches.open(cacheName);
+            console.log("[SW] Caching new resource: ", e.request.url);
+            cache.put(e.request, response.clone());
+        }
+
+        return response;
+    })())
 });
