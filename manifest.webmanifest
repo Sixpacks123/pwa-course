@@ -4,7 +4,7 @@
     "description": "My first Progressive Web App",
     "icons": [
         {
-            "src": "/icons/github.png",
+            "src": "https://github.githubassets.com/assets/GitHub-Logo-ee398b662d42.png",
             "sizes": "256x256",
             "type": "image/png"
         }
