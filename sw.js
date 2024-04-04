@@ -1,4 +1,4 @@
-const cacheName = 'v1';
+const cacheName = 'v2';
 const filesToCache = [
   '/index.html',
   '/icons/github-256.png',
@@ -6,14 +6,13 @@ const filesToCache = [
 ];
 
 // Installation du Service Worker et mise en cache des ressources préchargées
-self.addEventListener('install', event => {
-    console.log('[SW] Install');
-    event.waitUntil(
-        caches.open(cacheName)
-        .then(cache => {
-            return cache.addAll(filesToCache);
-        })
-    );
+self.addEventListener("insall", (e) => {
+    console.log("[SW] install");
+    e.waitUntil((async () => {
+        const cache = await caches.open(cacheName);
+        console.log("[SW] Caching files");
+        await cache.addAll(filesToCache);
+    })());
 });
 
 // Intercepter les requêtes réseau et répondre avec les ressources mises en cache
